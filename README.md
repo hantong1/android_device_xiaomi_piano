@@ -1,50 +1,38 @@
 # Xiaomi Pad 8 Pro (piano)
 
-<img src="docs/piano.jpg" width="200" alt="Xiaomi Pad 8 Pro">
+Unofficial LineageOS 23.2, TWRP and OrangeFox trees for the Xiaomi Pad 8 Pro
+(Snapdragon 8 Elite / SM8750).
 
-Unofficial recovery and ROM trees for the Xiaomi Pad 8 Pro (codename `piano`,
-Snapdragon 8 Elite / SM8750).
+Lineage uses the stock audio and display stack from HyperOS Global OS3.0.304.
+The cleaned base is in development and awaits build and device validation.
 
-Each project lives on its own branch. This branch only holds this page and the
-GitHub Actions workflows.
+## Status
+
+| Component | Status |
+| --- | --- |
+| LineageOS 23.2 stock base | Validation pending |
+| MiuiCamera, Dolby and volume boost | Integrated; validation pending |
+| Stylus, keyboard and cover support | Retained; validation pending |
+| Cellular connectivity | Not supported; Wi-Fi-only tablet |
+| TWRP and OrangeFox | See [releases](../../releases) |
 
 ## Branches
 
-### Recoveries
+| Branch | Checkout path |
+| --- | --- |
+| `lineage-23.2` | `device/xiaomi/piano` |
+| `device-common-16` | `device/xiaomi/sm8750-common` |
+| `vendor-16` | `vendor/xiaomi/piano` |
+| `vendor-common-16` | `vendor/xiaomi/sm8750-common` |
+| `kernel-16` | `device/xiaomi/piano-kernel` |
+| `miuicamera-16` | `vendor/xiaomi/piano-miuicamera` |
+| `twrp-16` | TWRP: `device/xiaomi/piano` |
+| `ofox-16` | OrangeFox: `device/xiaomi/piano` |
 
-| Branch | Project | Status | Checkout path |
-| --- | --- | --- | --- |
-| [`twrp-16`](../../tree/twrp-16) | TWRP 3.7.1 | Released | `device/xiaomi/piano` |
-| [`ofox-16`](../../tree/ofox-16) | OrangeFox R12.0 | Tested, release coming | `device/xiaomi/piano` |
+## Build
 
-### ROMs
-
-| Branch | Contents | Status | Checkout path |
-| --- | --- | --- | --- |
-| [`lineage-23.2`](../../tree/lineage-23.2) | LineageOS 23.2 device tree | Work in progress, does not boot yet | `device/xiaomi/piano` |
-| [`device-common-16`](../../tree/device-common-16) | Shared SM8750 device tree | Work in progress | `device/xiaomi/sm8750-common` |
-| [`kernel-16`](../../tree/kernel-16) | Prebuilt kernel, DTB, DTBO and modules | From stock HyperOS | `device/xiaomi/piano-kernel` |
-| [`vendor-16`](../../tree/vendor-16) | Proprietary files for piano | From stock HyperOS | `vendor/xiaomi/piano` |
-| [`vendor-common-16`](../../tree/vendor-common-16) | Proprietary files shared by SM8750 | From stock HyperOS | `vendor/xiaomi/sm8750-common` |
-
-`16` is the Android version the branch is built for. The recoveries built from
-Android 16 source also work with Android 17 ROMs such as HyperOS 4. A ROM
-branch uses the ROM's own version (`lineage-23.2`).
-
-`device-common-16` holds build rules and config shared by SM8750 devices;
-`vendor-common-16` holds the matching stock binaries. Device trees and
-proprietary files are kept on separate branches, the usual Android layout.
-
-## Tested firmware
-
-- Global OS3.0.303 (Android 16)
-- China OS3.0.307 and OS3.0.308 (Android 16)
-- China OS4.0.0.42 / HyperOS 4 (Android 17)
-
-## Building LineageOS
-
-Add this as `.repo/local_manifests/piano.xml` in a LineageOS 23.2 tree, then
-run `repo sync`:
+In a LineageOS 23.2 source checkout, save this as
+`.repo/local_manifests/piano.xml`, then run `repo sync`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -52,29 +40,36 @@ run `repo sync`:
   <remote name="piano" fetch="https://github.com/ALXP-DANIEL" />
   <project name="android_device_xiaomi_piano" path="device/xiaomi/piano" remote="piano" revision="lineage-23.2" />
   <project name="android_device_xiaomi_piano" path="device/xiaomi/sm8750-common" remote="piano" revision="device-common-16" />
-  <project name="android_device_xiaomi_piano" path="device/xiaomi/piano-kernel" remote="piano" revision="kernel-16" clone-depth="1" />
   <project name="android_device_xiaomi_piano" path="vendor/xiaomi/piano" remote="piano" revision="vendor-16" clone-depth="1" />
   <project name="android_device_xiaomi_piano" path="vendor/xiaomi/sm8750-common" remote="piano" revision="vendor-common-16" clone-depth="1" />
+  <project name="android_device_xiaomi_piano" path="device/xiaomi/piano-kernel" remote="piano" revision="kernel-16" clone-depth="1" />
+  <project name="android_device_xiaomi_piano" path="vendor/xiaomi/piano-miuicamera" remote="piano" revision="miuicamera-16" clone-depth="1" />
 </manifest>
 ```
 
-```
+Set `PIANO_AVB_KEY_PATH` to a source-relative symlink to your existing external
+RSA4096 AVB key. Keep the same key when building updates.
+
+```sh
+export PIANO_AVB_KEY_PATH=piano-local-keys/lineage-23.2-avb.pem
 device/xiaomi/piano/patches/apply-patches.sh
 source build/envsetup.sh
-breakfast piano
+breakfast piano userdebug
 m bacon
 ```
 
-## Building a recovery
+Recovery build instructions are on the `twrp-16` and `ofox-16` branches.
 
-- TWRP: check out `twrp-16` into `device/xiaomi/piano` of a TWRP
-  `twrp-16.0` source tree.
-- OrangeFox: check out `ofox-16` into `device/xiaomi/piano` of an OrangeFox
-  `fox_16.0` source tree, then follow that branch's `patches/README.md`.
+## Install
 
-Both also build in GitHub Actions: `Actions > TWRP 16 Builder` and
-`Actions > OrangeFox R12 Builder`.
+Follow the selected release's firmware and recovery requirements. In recovery,
+choose ADB sideload:
 
-## Releases
+```sh
+adb sideload lineage-23.2-RELEASE-piano.zip
+```
 
-Downloads are on the [Releases](../../releases) page.
+No-wipe updates to the new EROFS base are awaiting validation.
+Keep the bootloader unlocked.
+
+[Downloads and release notes](../../releases).
