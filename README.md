@@ -26,8 +26,9 @@ curl -fsSLO https://raw.githubusercontent.com/ALXP-DANIEL/android_device_xiaomi_
 bash sync-device.sh
 ```
 
-Choose your ROM, the trees and branches to sync, then optional TWRP or
-OrangeFox trees. Recovery trees use a separate directory. For ROM trees,
-run from your ROM source checkout.
+Choose ROM or recovery, then LineageOS/EvoX or TWRP/OrangeFox.
+For ROM setups, select individual trees and their branches. Run from the
+root of the corresponding ROM or recovery source checkout. The script
+syncs device trees only; it does not download the Android source itself.
 
 EvoX requires a compatible device branch; one is not published yet.
