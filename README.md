@@ -19,8 +19,15 @@ HyperOS Global OS3.0.304.
 
 ## Sync device trees
 
-Run from the root of a LineageOS source checkout:
+Run the setup script:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/ALXP-DANIEL/android_device_xiaomi_piano/main/sync-device.sh | bash
+curl -fsSLO https://raw.githubusercontent.com/ALXP-DANIEL/android_device_xiaomi_piano/main/sync-device.sh
+bash sync-device.sh
 ```
+
+Choose your ROM, the trees and branches to sync, then optional TWRP or
+OrangeFox trees. Recovery trees use a separate directory. For ROM trees,
+run from your ROM source checkout.
+
+EvoX requires a compatible device branch; one is not published yet.
